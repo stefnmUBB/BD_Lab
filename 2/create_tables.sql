@@ -70,3 +70,87 @@ CREATE TABLE ExemplarBancnote (
 	StareConservare     INT CHECK (1<=StareConservare AND StareConservare<=10),
 	IdDepozit           INT FOREIGN KEY REFERENCES SpatiuDepozitare(IdDepozit) 
 );
+
+
+-- Jocuri Video - Console
+
+CREATE TABLE Companie (
+	IdCompanie INT PRIMARY KEY IDENTITY,
+	Nume VARCHAR(30)
+);
+
+CREATE TABLE TipConsola (
+	IdTipConsola      INT PRIMARY KEY IDENTITY,
+	IdCompanie        INT FOREIGN KEY REFERENCES Companie(IdCompanie),
+	Nume              VARCHAR(30),
+	DataLansare       DATETIME,
+	Portabilitate     VARCHAR(10) NOT NULL CHECK (Portabilitate in ('TV','Portabil','Hibrid')),
+	ProcesorPrincipal VARCHAR(10),
+	FrecventaProcesor INT,
+	LatimeDeBanda     INT NOT NULL CHECK (LatimeDeBanda in (8,16,32,64))
+);
+
+/*CREATE TABLE RegistruBackwardsCompatibility (
+	
+);*/
+
+CREATE TABLE ExemplarConsole (
+	IdExemplarConsola INT PRIMARY KEY IDENTITY,
+	IdTipConsola      INT FOREIGN KEY REFERENCES TipConsola(IdTipConsola),
+	StareConservare   INT CHECK (1<=StareConservare AND StareConservare<=10),
+	IdDepozit         INT FOREIGN KEY REFERENCES SpatiuDepozitare(IdDepozit),
+	Culoare           INT, -- RGB
+);
+
+-- Jocuri Vide - Titluri
+
+CREATE TABLE Franciza (
+	IdFranciza INT PRIMARY KEY IDENTITY,
+	Nume VARCHAR(30),
+);
+
+CREATE TABLE TitluJocVideo (
+	IdTitluJocVideo  INT PRIMARY KEY IDENTITY,
+	Nume             VARCHAR(100),
+	Platforma        INT NOT NULL FOREIGN KEY REFERENCES TipConsola(IdTipConsola),
+	DataLansare      DATETIME,
+	CopiiVandute     INT,
+	IdFranciza       INT NULL FOREIGN KEY REFERENCES Franciza(IdFranciza),
+	IdCompanie       INT FOREIGN KEY REFERENCES Companie(IdCompanie),
+	Remake           INT FOREIGN KEY REFERENCES TitluJocVideo(IdTitluJocVideo)
+);
+
+CREATE TABLE ExemplarJocVideo (
+	IdExemplarJocVideo INT PRIMARY KEY IDENTITY,
+	IdTitluJocVideo    INT FOREIGN KEY REFERENCES TitluJocVideo(IdTitluJocVideo),
+	StareConservare   INT CHECK (1<=StareConservare AND StareConservare<=10),
+	IdDepozit         INT FOREIGN KEY REFERENCES SpatiuDepozitare(IdDepozit),
+);
+
+CREATE TABLE Vanzator(
+	IdVanzator INT PRIMARY KEY IDENTITY,
+	Nume       VARCHAR(30),
+	Prenume    VARCHAR(30),
+);
+
+CREATE TABLE Achizitie(
+	IdAchizitie INT PRIMARY KEY IDENTITY,
+
+	-- doar una din urmatoarele:
+	IdMoneda    INT FOREIGN KEY REFERENCES ExemplarMonede(IdExemplarMoneda),
+	IdBancnota  INT FOREIGN KEY REFERENCES ExemplarBancnote(IdExemplarBancnota),
+	IdConsola   INT FOREIGN KEY REFERENCES ExemplarConsole(IdExemplarConsola),
+	IdJocVideo  INT FOREIGN KEY REFERENCES ExemplarJocVideo(IdExemplarJocVideo),
+
+	CONSTRAINT ckUnSingurExemplar CHECK  (
+		( CASE WHEN IdMoneda   IS NULL THEN 0 ELSE 1 END
+		+ CASE WHEN IdBancnota IS NULL THEN 0 ELSE 1 END
+		+ CASE WHEN IdConsola  IS NULL THEN 0 ELSE 1 END
+		+ CASE WHEN IdJocVideo IS NULL THEN 0 ELSE 1 END
+		) = 1
+	),
+
+	DataAchizitiei DATETIME,
+	IdVanzator     INT FOREIGN KEY REFERENCES Vanzator(IdVanzator),
+	Pret           FLOAT NOT NULL,
+);
