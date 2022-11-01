@@ -46,7 +46,8 @@ INSERT INTO TitluJocVideo (Nume, Platforma, DataLansare, IdFranciza, IdCompanie)
 	('Pokemon: Version Blanche', 4, '2009', 1, NULL),
 	('Barbie Dreamhouse Party', 4, '2013', NULL, NULL)
 	
-
+UPDATE TitluJocVideo SET 
+	IdCompanie = 4 WHERE IdTitluJocVideo IN (4, 23)
 
 Select * FROM Franciza;
 
