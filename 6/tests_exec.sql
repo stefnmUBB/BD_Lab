@@ -27,7 +27,7 @@ BEGIN
 	SET @ds = GETDATE()		
 
 	-- removals
-	DECLARE crs CURSOR FOR 
+	DECLARE crs CURSOR FOR
 		SELECT Name, NoOfRows FROM TestTables TT INNER JOIN Tables T On TT.TableID = T.TableID  WHERE TT.TestID = @tid
 		ORDER BY Position DESC
 	OPEN crs
@@ -72,7 +72,7 @@ BEGIN
 	PRINT 'Executing Views'
 	DECLARE @vw_name VARCHAR(100)	
 
-	-- removals
+	-- views
 	DECLARE crs3 CURSOR FOR 
 		SELECT Name FROM TestViews TV INNER JOIN Views V On TV.ViewID = V.ViewID  WHERE TV.TestID = @tid		
 	OPEN crs3
@@ -159,6 +159,10 @@ EXEC ExecuteAllTests
 --EXEC ExecuteIndividualTestTable 1
 --EXEC ExecuteIndividualTestTable 2
 --EXEC ExecuteIndividualTestTable 3
+
+SELECT * FROM TestTables
+SELECT * FROM TestViews
+SELECT * FROM Tests
 
 SELECT * FROM TestRuns ORDER BY TestRunID DESC
 SELECT TOP 10 * FROM TestRunTables ORDER BY TestRunID DESC

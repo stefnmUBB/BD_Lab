@@ -25,7 +25,7 @@ CREATE OR ALTER PROCEDURE AddTestTables AS BEGIN
 		(1, 3, 50, 1),  -- Material moneda
 		(1, 1, 20, 2),  -- Compozitie moneda
 		(1, 4, 20, 2),  -- Tip moneda
-		(1, 5, 100, 3)  -- Tip moneda
+		(1, 5, 100, 3)  -- Exemplar
 
 	INSERT INTO TestTables (TestID, TableID, NoOfRows, Position) VALUES
 		(2, 2, 300, 1), -- Materie Prima Moneda		
